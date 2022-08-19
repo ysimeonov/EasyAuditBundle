@@ -14,9 +14,10 @@ namespace Xiidea\EasyAuditBundle\Tests\Resolver;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Xiidea\EasyAuditBundle\Tests\Fixtures\Common\CommonDoctrineManager;
 use Xiidea\EasyAuditBundle\Events\DoctrineObjectEvent;
 use Xiidea\EasyAuditBundle\Resolver\DoctrineObjectEventResolver;
+use Xiidea\EasyAuditBundle\Resolver\EntityEventResolver;
+use Xiidea\EasyAuditBundle\Tests\Fixtures\Common\CommonDoctrineManager;
 use Xiidea\EasyAuditBundle\Tests\Fixtures\Event\Basic;
 use Xiidea\EasyAuditBundle\Tests\Fixtures\ORM\UserEntity;
 
@@ -74,7 +75,7 @@ class DoctrineObjectEventResolverTest extends TestCase
         $this->unitOfWork->expects($this->once())
             ->method('getEntityChangeSet')
             ->with($this->equalTo($this->event->getLifecycleEventArgs()->getObject()))
-            ->willReturn($this->equalTo(array(array('something'))));
+            ->willReturn($this->equalTo([['something']]));
 
         $eventInfo = $this->eventResolver->getEventLogInfo($this->event, 'easy_audit.doctrine.object.updated');
 
@@ -91,7 +92,7 @@ class DoctrineObjectEventResolverTest extends TestCase
         $this->unitOfWork->expects($this->once())
             ->method('getDocumentChangeSet')
             ->with($this->equalTo($this->event->getLifecycleEventArgs()->getObject()))
-            ->willReturn($this->equalTo(array(array('something'))));
+            ->willReturn($this->equalTo([['something']]));
 
         $eventInfo = $this->eventResolver->getEventLogInfo($this->event, 'easy_audit.doctrine.object.updated');
 
@@ -169,10 +170,10 @@ class DoctrineObjectEventResolverTest extends TestCase
 
     private function getExpectedEventInfo($event, $entity, $property = '', $value = '')
     {
-        return array(
+        return [
             'description' => "$entity has been $event".sprintf(' with %s = "%s"', $property, $value),
             'type' => "$entity $event",
-        );
+        ];
     }
 
     /**

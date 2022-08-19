@@ -18,21 +18,18 @@ use Xiidea\EasyAuditBundle\Events\DoctrineEvents;
 
 class Logger implements LoggerInterface
 {
-    private $entityDeleteLogs = [];
+    private array $entityDeleteLogs = [];
 
-    /**
-     * @var \Doctrine\Persistence\ManagerRegistry
-     */
-    private $doctrine;
+    private ManagerRegistry $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
     {
         $this->doctrine = $doctrine;
     }
 
-    public function log(AuditLog $event = null)
+    public function log(AuditLog $event = null): void
     {
-        if (empty($event)) {
+        if ($event === null) {
             return;
         }
 
