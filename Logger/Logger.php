@@ -11,28 +11,25 @@
 
 namespace Xiidea\EasyAuditBundle\Logger;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ManagerRegistry;
 use Xiidea\EasyAuditBundle\Model\BaseAuditLog as AuditLog;
 use Xiidea\EasyAuditBundle\Events\DoctrineEvents;
 
 class Logger implements LoggerInterface
 {
-    private $entityDeleteLogs = [];
+    private array $entityDeleteLogs = [];
 
-    /**
-     * @var \Doctrine\Common\Persistence\ManagerRegistry
-     */
-    private $doctrine;
+    private ManagerRegistry $doctrine;
 
     public function __construct(ManagerRegistry $doctrine)
     {
         $this->doctrine = $doctrine;
     }
 
-    public function log(AuditLog $event = null)
+    public function log(AuditLog $event = null): void
     {
-        if (empty($event)) {
+        if ($event === null) {
             return;
         }
 
@@ -54,7 +51,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * @return \Doctrine\Common\Persistence\ManagerRegistry
+     * @return ManagerRegistry
      */
     public function getDoctrine()
     {

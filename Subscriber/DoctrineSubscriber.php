@@ -12,13 +12,13 @@
 namespace Xiidea\EasyAuditBundle\Subscriber;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\LegacyEventDispatcherProxy;
 use Xiidea\EasyAuditBundle\Annotation\SubscribeDoctrineEvents;
-use Xiidea\EasyAuditBundle\Events\DoctrineObjectEvent;
 use Xiidea\EasyAuditBundle\Events\DoctrineEvents;
+use Xiidea\EasyAuditBundle\Events\DoctrineObjectEvent;
 
 class DoctrineSubscriber implements EventSubscriber
 {
@@ -37,19 +37,19 @@ class DoctrineSubscriber implements EventSubscriber
      */
     private $entities;
 
-    public function __construct($entities = array())
+    public function __construct($entities = [])
     {
         $this->entities = $entities;
     }
 
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             'postPersist',
             'postUpdate',
             'preRemove',
             'postRemove',
-        );
+        ];
     }
 
     public function postPersist(LifecycleEventArgs $args)
@@ -98,8 +98,7 @@ class DoctrineSubscriber implements EventSubscriber
     }
 
     /**
-     * @param string             $eventName
-     * @param LifecycleEventArgs $args
+     * @param string $eventName
      */
     private function handleEvent($eventName, LifecycleEventArgs $args)
     {
@@ -156,7 +155,7 @@ class DoctrineSubscriber implements EventSubscriber
     /**
      * @param $entity
      *
-     * @return null|object
+     * @return object|null
      */
     protected function hasAnnotation($entity)
     {
@@ -217,7 +216,6 @@ class DoctrineSubscriber implements EventSubscriber
     }
 
     /**
-     * @param LifecycleEventArgs $args
      * @param $className
      *
      * @return array
@@ -244,7 +242,7 @@ class DoctrineSubscriber implements EventSubscriber
      */
     public function setDispatcher($dispatcher)
     {
-        if(class_exists(LegacyEventDispatcherProxy::class)) {
+        if (class_exists(LegacyEventDispatcherProxy::class)) {
             $dispatcher = LegacyEventDispatcherProxy::decorate($dispatcher);
         }
 

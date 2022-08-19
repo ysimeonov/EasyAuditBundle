@@ -11,13 +11,13 @@
 
 namespace Xiidea\EasyAuditBundle\Tests\Subscriber;
 
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use PHPUnit\Framework\TestCase;
 use Xiidea\EasyAuditBundle\Annotation\SubscribeDoctrineEvents;
 use Xiidea\EasyAuditBundle\Subscriber\DoctrineSubscriber;
 use Xiidea\EasyAuditBundle\Tests\Fixtures\ORM\Movie;
-use Doctrine\Common\Persistence\ObjectManager;
 
 class DoctrineSubscriberTest extends TestCase
 {
@@ -54,31 +54,31 @@ class DoctrineSubscriberTest extends TestCase
 
     public function testConstructor()
     {
-        $entities = array('entity1', 'entity2');
+        $entities = ['entity1', 'entity2'];
         $subscriber = new DoctrineSubscriber($entities);
         $this->assertAttributeEquals($entities, 'entities', $subscriber);
-        $subscriber = new DoctrineSubscriber(array());
-        $this->assertAttributeEquals(array(), 'entities', $subscriber);
+        $subscriber = new DoctrineSubscriber([]);
+        $this->assertAttributeEquals([], 'entities', $subscriber);
     }
 
     public function testSubscribedEvents()
     {
         $subscriber = new DoctrineSubscriber();
-        $this->assertEquals(array(
+        $this->assertEquals([
             'postPersist',
             'postUpdate',
             'preRemove',
             'postRemove',
-        ), $subscriber->getSubscribedEvents());
+        ], $subscriber->getSubscribedEvents());
     }
 
     public function testCreateEventForAnnotatedEntity()
     {
-        $annotation = new SubscribeDoctrineEvents(array('events' => 'created'));
+        $annotation = new SubscribeDoctrineEvents(['events' => 'created']);
 
         $this->initializeAnnotationReader($annotation);
 
-        $subscriber = new DoctrineSubscriber(array());
+        $subscriber = new DoctrineSubscriber([]);
 
         $this->invokeCreatedEventCall($subscriber);
     }
@@ -86,7 +86,7 @@ class DoctrineSubscriberTest extends TestCase
     public function testCreateEventForEntityNotConfiguredToTrack()
     {
         $this->initializeAnnotationReader(null);
-        $subscriber = new DoctrineSubscriber(array());
+        $subscriber = new DoctrineSubscriber([]);
         $this->invokeCreatedEventCall($subscriber);
     }
 
@@ -94,7 +94,7 @@ class DoctrineSubscriberTest extends TestCase
     {
         $this->initializeAnnotationReader();
 
-        $subscriber = new DoctrineSubscriber(array('Xiidea\EasyAuditBundle\Tests\Fixtures\ORM\Movie' => array('created')));
+        $subscriber = new DoctrineSubscriber(['Xiidea\EasyAuditBundle\Tests\Fixtures\ORM\Movie' => ['created']]);
 
         $this->invokeCreatedEventCall($subscriber);
     }
@@ -103,7 +103,7 @@ class DoctrineSubscriberTest extends TestCase
     {
         $this->initializeAnnotationReader();
 
-        $subscriber = new DoctrineSubscriber(array('Xiidea\EasyAuditBundle\Tests\Fixtures\ORM\Movie' => array()));
+        $subscriber = new DoctrineSubscriber(['Xiidea\EasyAuditBundle\Tests\Fixtures\ORM\Movie' => []]);
 
         $this->invokeCreatedEventCall($subscriber);
     }
@@ -111,14 +111,14 @@ class DoctrineSubscriberTest extends TestCase
     public function testUpdateEventForEntityNotConfiguredToTrack()
     {
         $this->initializeAnnotationReader();
-        $subscriber = new DoctrineSubscriber(array());
+        $subscriber = new DoctrineSubscriber([]);
         $this->invokeUpdatedEventCall($subscriber);
     }
 
     public function testRemovedEventForEntityNotConfiguredToTrack()
     {
         $this->initializeAnnotationReader(null);
-        $subscriber = new DoctrineSubscriber(array());
+        $subscriber = new DoctrineSubscriber([]);
         $this->invokeDeletedEventCall($subscriber);
     }
 
@@ -127,7 +127,7 @@ class DoctrineSubscriberTest extends TestCase
         $this->initializeAnnotationReader(null);
 
         $this->mockMetaData();
-        $subscriber = new DoctrineSubscriber(array('Xiidea\EasyAuditBundle\Tests\Fixtures\ORM\Movie' => array()));
+        $subscriber = new DoctrineSubscriber(['Xiidea\EasyAuditBundle\Tests\Fixtures\ORM\Movie' => []]);
         $this->invokeDeletedEventCall($subscriber);
     }
 
