@@ -60,7 +60,7 @@ class EventResolverFactory extends UserAwareComponent
      * @throws UnrecognizedEventInfoException
      * @throws \Exception
      */
-    public function getEventLog(Event $event, $eventName)
+    public function getEventLog($event, $eventName)
     {
         $eventLog = $this->getEventLogObject($this->getEventLogInfo($event, $eventName));
 
@@ -131,7 +131,7 @@ class EventResolverFactory extends UserAwareComponent
      *
      * @throws InvalidServiceException
      */
-    protected function getEventLogInfo(Event $event, $eventName)
+    protected function getEventLogInfo($event, $eventName)
     {
         if ($event instanceof EmbeddedEventResolverInterface) {
             return $event->getEventLogInfo($eventName);
